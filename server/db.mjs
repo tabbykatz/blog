@@ -4,9 +4,12 @@ import pgp from "pg-promise";
 const db = initDb();
 
 export const getTasks = () => db.any("SELECT * FROM tasks");
+export const getEntries = () => db.any("SELECT * FROM entries");
 
 export const addTask = (name) =>
   db.one("INSERT INTO tasks(name) VALUES(${name}) RETURNING *", { name });
+export const addEntry = (entry) =>
+  db.one("INSERT INTO entries(entry) VALUES(${entry}) RETURNING *", entry);
 
 function initDb() {
   let connection;
