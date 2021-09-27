@@ -5,8 +5,8 @@ const db = initDb();
 
 export const getEntries = () => db.any("SELECT * FROM entries");
 
-export const addEntry = ({ value }) =>
-  db.one("INSERT INTO entries(entry) VALUES(${value}) RETURNING *", { value });
+export const addEntry = ({ body }) =>
+  db.one("INSERT INTO entries(entry) VALUES(${body}) RETURNING *", { body });
 
 function initDb() {
   let connection;

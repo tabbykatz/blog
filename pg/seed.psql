@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.3
--- Dumped by pg_dump version 13.3
+-- Dumped from database version 13.4
+-- Dumped by pg_dump version 13.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,6 +19,31 @@ SET row_security = off;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: entries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.entries (
+    id integer NOT NULL,
+    entry text,
+    time_created timestamp without time zone DEFAULT now()
+);
+
+
+--
+-- Name: entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.entries ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: tasks; Type: TABLE; Schema: public; Owner: -
@@ -58,6 +83,17 @@ ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_
 
 
 --
+-- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.entries (id, entry, time_created) FROM stdin;
+15	## Hello, World!\n\nI adore Markdown. I keep a blog exclusively in .md files on github, and I take my notes in Markdown because &hearts;\n\n![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Markdown-mark.svg/175px-Markdown-mark.svg.png)\n	2021-09-27 20:44:43.851432
+16	This blog entry is formatted with `react-md-editor`, stored in psql, and brought back to life   for you thanks to the plain power of Markdown. \n\n[Learn more about `react-md-editor`](https://github.com/uiwjs/react-md-editor)	2021-09-27 20:47:12.170927
+17	## This is a Title\n\n### You can make smaller headers\n\n`insert some code`\n\n- [ ] how about a checklist?\n- [ ] i'm a fan\n\n### Perhaps you like Tables?\n| Syntax | Description |\n| --- | ----------- |\n| Header | Title |\n| Paragraph | Text |\n\n\n	2021-09-27 20:49:25.681755
+\.
+
+
+--
 -- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -68,6 +104,13 @@ COPY public.tasks (id, name) FROM stdin;
 4	Advocate for living wage
 5	Provide universal health care
 \.
+
+
+--
+-- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.entries_id_seq', 17, true);
 
 
 --

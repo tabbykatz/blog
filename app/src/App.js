@@ -24,6 +24,7 @@ const Post = () => {
 
   const addEntry = () => {
     apiClient.addEntry({ body: value });
+    console.log({ body: value });
     setValue("");
   };
   return (
