@@ -20,18 +20,21 @@ const App = () => (
 );
 
 const Post = () => {
-  const [value, setValue] = React.useState("**Hello world!!!**");
+  const [value, setValue] = React.useState("");
 
   const addEntry = () => {
-    apiClient.addEntry(value);
+    apiClient.addEntry({ body: value });
     setValue("");
   };
   return (
-    <div className="container">
-      <MDEditor value={value} onChange={setValue} />
-      {/* <MDEditor.Markdown source={value} /> */}
-      <button onClick={() => addEntry()}>Post</button>
-    </div>
+    <>
+      <div className="container">
+        <MDEditor value={value} onChange={setValue} />
+        {/* <MDEditor.Markdown source={value} /> */}
+        <button onClick={() => addEntry()}>Post</button>
+      </div>
+      <pre>{value}</pre>
+    </>
   );
 };
 

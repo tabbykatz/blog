@@ -1,12 +1,9 @@
-export const getTasks = () => _get("/api/tasks");
-
 export const getEntries = () => _get("/api/entries");
 
 export const addTask = (name) => _post("/api/tasks", { name });
 
 export const addEntry = (entry) => {
-  console.log(entry);
-  _post("/api/entries", entry);
+  _post("/api/entries", entry.value);
 };
 
 const _get = async (url) => (await fetch(url)).json();
