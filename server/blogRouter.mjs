@@ -5,15 +5,16 @@ import * as db from "./db.mjs";
 const blogRouter = express.Router();
 
 blogRouter.get("/", async (request, response) => {
-  const entries = await db.getEntries();
+  const entries = await db.getEntriesWithComments();
   response.json(entries);
 });
 
 blogRouter.use(express.json());
 blogRouter.post("/", async (request, response) => {
-  const entry = await db.addEntry(request.body);
-  console.log(entry);
-  response.status(201).json(entry);
+  response.status(201).json(await db.addEntry(request.body));
+});
+blogRouter.post("/:id", async (request, response) => {
+  response.status(201).json(await db.addComment(request.body));
 });
 
 export default blogRouter;

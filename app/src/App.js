@@ -3,6 +3,7 @@ import * as React from "react";
 import MDEditor from "@uiw/react-md-editor";
 import { Routes, Route, Link } from "react-router-dom";
 
+import { AddComment, CommentList } from "./Comments";
 import * as apiClient from "./apiClient";
 
 const App = () => (
@@ -50,7 +51,11 @@ const Blog = () => {
   return (
     <>
       {entries.map((entry) => (
-        <MDEditor.Markdown key={entry.id} source={entry.entry} />
+        <div key={entry.id}>
+          <MDEditor.Markdown source={entry.entry} />
+          <CommentList {...{ entry }} />
+          <AddComment {...{ entry }} />
+        </div>
       ))}
     </>
   );

@@ -21,6 +21,33 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    comment text,
+    date_created timestamp without time zone DEFAULT now(),
+    entry_id integer,
+    author text
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.comments ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
 -- Name: entries; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -83,13 +110,23 @@ ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_
 
 
 --
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.comments (id, comment, date_created, entry_id, author) FROM stdin;
+9	Here is a comment.	2021-09-28 21:23:17.35377	21	tabitha
+10	Here is another comment.	2021-09-28 21:25:18.827149	21	annie
+11	Hello!	2021-09-28 21:25:33.210237	20	annie
+\.
+
+
+--
 -- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.entries (id, entry, time_created) FROM stdin;
-15	## Hello, World!\n\nI adore Markdown. I keep a blog exclusively in .md files on github, and I take my notes in Markdown because &hearts;\n\n![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Markdown-mark.svg/175px-Markdown-mark.svg.png)\n	2021-09-27 20:44:43.851432
-16	This blog entry is formatted with `react-md-editor`, stored in psql, and brought back to life   for you thanks to the plain power of Markdown. \n\n[Learn more about `react-md-editor`](https://github.com/uiwjs/react-md-editor)	2021-09-27 20:47:12.170927
-17	## This is a Title\n\n### You can make smaller headers\n\n`insert some code`\n\n- [ ] how about a checklist?\n- [ ] i'm a fan\n\n### Perhaps you like Tables?\n| Syntax | Description |\n| --- | ----------- |\n| Header | Title |\n| Paragraph | Text |\n\n\n	2021-09-27 20:49:25.681755
+20	## Hello, World! \n\nHere is the first entry. \n\n![image from codex seraphinanus](https://i2.wp.com/www.brainpickings.org/wp-content/uploads/2013/10/codexseraphinianus8.jpg?w=680&ssl=1)\n	2021-09-28 21:19:27.623223
+21	## Another entry\n\nWriting more things\n\n![another image from codex](https://i0.wp.com/www.brainpickings.org/wp-content/uploads/2013/10/codexseraphinianus9.jpg?w=680&ssl=1)	2021-09-28 21:21:27.644188
 \.
 
 
@@ -107,10 +144,17 @@ COPY public.tasks (id, name) FROM stdin;
 
 
 --
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.comments_id_seq', 11, true);
+
+
+--
 -- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.entries_id_seq', 17, true);
+SELECT pg_catalog.setval('public.entries_id_seq', 21, true);
 
 
 --
@@ -121,11 +165,43 @@ SELECT pg_catalog.setval('public.tasks_id_seq', 5, true);
 
 
 --
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: entries entries_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entries
+    ADD CONSTRAINT entries_id_key UNIQUE (id);
+
+
+--
+-- Name: entries entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.entries
+    ADD CONSTRAINT entries_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tasks tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tasks
     ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments entry_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT entry_id FOREIGN KEY (entry_id) REFERENCES public.entries(id) ON DELETE CASCADE;
 
 
 --
