@@ -19,7 +19,11 @@ export const addComment = ({ comment, author, entry_id }) =>
     "INSERT INTO comments (comment, author, entry_id) VALUES (${comment}, ${author}, ${entry_id}) RETURNING *",
     { comment, author, entry_id },
   );
-
+export const editEntry = ({ entry, title, slug, entry_id }) =>
+  db.any(
+    "UPDATE entries SET slug = ${slug}, entry = ${entry}, title= ${title} where id = ${entry_id} RETURNING *",
+    { entry, title, slug, entry_id },
+  );
 function initDb() {
   let connection;
 

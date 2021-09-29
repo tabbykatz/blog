@@ -16,5 +16,8 @@ blogRouter.post("/", async (request, response) => {
 blogRouter.post("/:id", async (request, response) => {
   response.status(201).json(await db.addComment(request.body));
 });
+blogRouter.put("/:id", async (request, response) => {
+  response.status(201).json(await db.editEntry(request.body));
+});
 
 export default blogRouter;

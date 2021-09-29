@@ -36,8 +36,11 @@ const WritePost = ({ loadEntries }) => {
 
   const addEntry = (e) => {
     e.preventDefault();
-    // TODO: this regex is not great. improve
-    const slug = title.replace(/[\W]+/g, "-");
+    const makeSlugFromTitle = (s) => {
+      s = s.trim ? s.trim() : s.replace(/^\s+|\s+$/g, "");
+      return s.split(/\s+/).join("-");
+    };
+    const slug = makeSlugFromTitle(title);
     const blogEntry = {
       title,
       entry,
