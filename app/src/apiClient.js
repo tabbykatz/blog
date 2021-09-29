@@ -1,11 +1,11 @@
 export const getEntries = () => _get("/api/entries");
 
-export const addEntry = (entry) => {
-  _post("/api/entries", entry);
+export const addEntry = ({ title, entry, slug }) => {
+  _post("/api/entries", { title, entry, slug });
 };
 
-export const addComment = ({ body, author, entry_id }) => {
-  _post(`/api/entries/${entry_id}`, { body, author, entry_id });
+export const addComment = ({ comment, author, entry_id }) => {
+  _post(`/api/entries/${entry_id}`, { comment, author, entry_id });
 };
 const _get = async (url) => (await fetch(url)).json();
 

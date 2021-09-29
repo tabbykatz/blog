@@ -8,31 +8,32 @@ export const AddComment = ({ entry }) => {
   const [comment, setComment] = React.useState("**Say something nice!**");
   const [author, setAuthor] = React.useState("");
 
-  const addComment = (entry_id) => {
+  const addComment = (e) => {
+    e.preventDefault();
     apiClient.addComment({
-      body: comment,
+      comment: comment,
       author: author,
-      entry_id: entry_id,
+      entry_id: entry.id,
     });
     setComment("");
     setAuthor("");
   };
-
+  console.log(entry);
   return (
     <>
       {" "}
       <details>
         <summary>Leave a comment</summary>
-        <form>
+        <form onSubmit={(e) => addComment(e)}>
           <MDEditor value={comment} onChange={setComment} />
           <input
             type="text"
             value={author}
-            onChange={setAuthor}
+            onChange={(e) => setAuthor(e.target.value)}
             placeholder="Your name?"
             required
           />
-          <button onClick={() => addComment(entry.id)}>Comment</button>
+          <button>Comment</button>
         </form>
       </details>
     </>
@@ -40,13 +41,12 @@ export const AddComment = ({ entry }) => {
 };
 
 export const CommentList = ({ entry }) => {
-  return (
+  return entry.comments[0] === null ? (
+    <div>No comments yet.</div>
+  ) : (
     <ul>
       {entry.comments.map((comment) => (
-        <li key={comment?.id || entry.id}>
-          {comment?.comment}
-          {comment?.author ? `  - ${comment?.author}` : null}
-        </li>
+        <MDEditor.Markdown key={comment.id} source={comment.comment} />
       ))}
     </ul>
   );

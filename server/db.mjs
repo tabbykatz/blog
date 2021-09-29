@@ -8,8 +8,11 @@ export const getEntriesWithComments = () =>
     "SELECT entries.*, JSON_AGG(comments) AS comments FROM entries LEFT JOIN comments ON entries.id = comments.entry_id GROUP BY entries.id ORDER BY entries.id DESC",
   );
 
-export const addEntry = ({ body }) =>
-  db.one("INSERT INTO entries(entry) VALUES(${body}) RETURNING *", { body });
+export const addEntry = ({ entry, title, slug }) =>
+  db.any(
+    "INSERT INTO entries(entry, title, slug) VALUES(${entry}, ${title}, ${slug}) RETURNING *",
+    { entry, title, slug },
+  );
 
 export const addComment = ({ comment, author, entry_id }) =>
   db.any(
