@@ -54,7 +54,9 @@ ALTER TABLE public.comments ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 CREATE TABLE public.entries (
     id integer NOT NULL,
     entry text,
-    time_created timestamp without time zone DEFAULT now()
+    time_created timestamp without time zone DEFAULT now(),
+    title text,
+    slug text
 );
 
 
@@ -114,9 +116,11 @@ ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_
 --
 
 COPY public.comments (id, comment, date_created, entry_id, author) FROM stdin;
-9	Here is a comment.	2021-09-28 21:23:17.35377	21	tabitha
-10	Here is another comment.	2021-09-28 21:25:18.827149	21	annie
-11	Hello!	2021-09-28 21:25:33.210237	20	annie
+19	&hearts;	2021-09-29 15:30:11.459035	40	tabbykatz
+20	| Table |  Love |\n|--|--|\n	2021-09-29 18:09:34.853345	46	tabitha
+21	When I leave a comment everything breaks and I don't know why	2021-09-29 18:35:08.807836	46	sad tabitha
+22	**Say something nice!**	2021-09-29 18:58:29.043139	40	tristan
+23	**Say something nice!**	2021-09-29 20:02:28.54204	48	george
 \.
 
 
@@ -124,9 +128,13 @@ COPY public.comments (id, comment, date_created, entry_id, author) FROM stdin;
 -- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.entries (id, entry, time_created) FROM stdin;
-20	## Hello, World! \n\nHere is the first entry. \n\n![image from codex seraphinanus](https://i2.wp.com/www.brainpickings.org/wp-content/uploads/2013/10/codexseraphinianus8.jpg?w=680&ssl=1)\n	2021-09-28 21:19:27.623223
-21	## Another entry\n\nWriting more things\n\n![another image from codex](https://i0.wp.com/www.brainpickings.org/wp-content/uploads/2013/10/codexseraphinianus9.jpg?w=680&ssl=1)	2021-09-28 21:21:27.644188
+COPY public.entries (id, entry, time_created, title, slug) FROM stdin;
+44	[BLM](https://blacklivesmatter.com/)	2021-09-29 16:55:34.552165	BLACK LIVES MATTER	BLACK-LIVES-MATTER
+40	[![MANIFESTO AGAINST POLICE VIOLENCE / PUSSY RIOT x LASTESIS](https://res.cloudinary.com/marcomontalbano/image/upload/v1632929295/video_to_markdown/images/youtube--UPfcb9aTcl0-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/UPfcb9aTcl0 "MANIFESTO AGAINST POLICE VIOLENCE / PUSSY RIOT x LASTESIS")	2021-09-29 15:28:46.064523	Yes All Cops	ACAB
+47	Markdown &hearts;	2021-09-29 18:51:30.957941	Here's a title with trailing punctuation!	Here's-a-title-with-trailing-punctuation!
+48	Markdown &hearts;	2021-09-29 18:51:47.376938	What if I use trailing space.   	What-if-I-use-trailing-space.
+49	Markdown &hearts;	2021-09-29 18:52:16.58256	I dunno    	I-dunno
+46	Markdown &hearts;	2021-09-29 17:16:37.609298	Hello, World!	Hello-World
 \.
 
 
@@ -147,14 +155,14 @@ COPY public.tasks (id, name) FROM stdin;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.comments_id_seq', 11, true);
+SELECT pg_catalog.setval('public.comments_id_seq', 23, true);
 
 
 --
 -- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.entries_id_seq', 21, true);
+SELECT pg_catalog.setval('public.entries_id_seq', 49, true);
 
 
 --

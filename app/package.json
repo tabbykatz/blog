@@ -29,6 +29,9 @@
   },
   "proxy": "http://localhost:4000",
   "dependencies": {
+    "@emotion/core": "^11.0.0",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@uiw/react-md-editor": "^3.6.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

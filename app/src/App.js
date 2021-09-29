@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { Global, css, jsx } from "@emotion/react";
+import styled from "@emotion/styled";
 import MDEditor from "@uiw/react-md-editor";
 import { Routes, Route, Link, useParams } from "react-router-dom";
 
@@ -72,10 +74,12 @@ const WritePost = ({ loadEntries }) => {
 
 const Post = ({ entries }) => {
   const findPostBySlug = (slug) => {
+    console.log("Hello", { slug });
     return entries.find((entry) => entry.slug === slug);
   };
-  const { slug } = useParams(),
-    entry = findPostBySlug(slug);
+  const { slug } = useParams();
+
+  const entry = findPostBySlug(slug);
 
   return (
     <>
