@@ -3,26 +3,32 @@ import pgp from "pg-promise";
 
 const db = initDb();
 
-export const getEntriesWithComments = () =>
+export const getPostsWithComments = () =>
   db.any(
-    "SELECT entries.*, JSON_AGG(comments) AS comments FROM entries LEFT JOIN comments ON entries.id = comments.entry_id GROUP BY entries.id ORDER BY entries.id DESC",
+    "SELECT posts.*, JSON_AGG(comments) AS comments FROM posts LEFT JOIN comments ON posts.id = comments.post_id GROUP BY posts.id ORDER BY posts.id DESC",
   );
 
-export const addEntry = ({ entry, title, slug }) =>
-  db.any(
-    "INSERT INTO entries(entry, title, slug) VALUES(${entry}, ${title}, ${slug}) RETURNING *",
-    { entry, title, slug },
+export const getPostById = (id) =>
+  db.one(
+    "SELECT posts.*, COALESCE(json_agg(comments) FILTER (WHERE comments IS NOT NULL), '[]') AS comments FROM posts LEFT JOIN comments ON posts.id = comments.post_id WHERE posts.id = ${ id } GROUP BY posts.id",
+    { id },
   );
 
-export const addComment = ({ comment, author, entry_id }) =>
+export const addPost = ({ post, title, slug }) =>
   db.any(
-    "INSERT INTO comments (comment, author, entry_id) VALUES (${comment}, ${author}, ${entry_id}) RETURNING *",
-    { comment, author, entry_id },
+    "INSERT INTO posts(post, title, slug) VALUES(${post}, ${title}, ${slug}) RETURNING *",
+    { post, title, slug },
   );
-export const editEntry = ({ entry, title, slug, entry_id }) =>
+
+export const addComment = ({ comment, author, post_id }) =>
   db.any(
-    "UPDATE entries SET slug = ${slug}, entry = ${entry}, title= ${title} where id = ${entry_id} RETURNING *",
-    { entry, title, slug, entry_id },
+    "INSERT INTO comments (comment, author, post_id) VALUES (${comment}, ${author}, ${post_id}) RETURNING *",
+    { comment, author, post_id },
+  );
+export const editPost = ({ post, title, slug, post_id }) =>
+  db.any(
+    "UPDATE posts SET slug = ${slug}, post = ${post}, title= ${title} where id = ${post_id} RETURNING *",
+    { post, title, slug, post_id },
   );
 function initDb() {
   let connection;

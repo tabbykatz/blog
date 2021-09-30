@@ -1,62 +1,59 @@
 import * as React from "react";
 
-import { Global, css, jsx } from "@emotion/react";
-import styled from "@emotion/styled";
 import MDEditor from "@uiw/react-md-editor";
-import { Routes, Route, Link, useParams } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Link,
+  useParams,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+import slugify from "slugify";
 
 import { CommentList, AddComment } from "./Comments";
 import * as apiClient from "./apiClient";
 
 const App = () => {
-  const [entries, setEntries] = React.useState([]);
-
-  const loadEntries = async () => setEntries(await apiClient.getEntries());
-  React.useEffect(() => {
-    loadEntries();
-  }, []);
-
   return (
     <>
       <nav>
-        <Link to="/">Blog</Link> | <Link to="post">Write Post</Link>
+        <Link to="/">Blog</Link> | <Link to="add-post">Write Post</Link>
       </nav>
       <main>
         <Routes>
-          <Route path="/post" element={<WritePost {...{ loadEntries }} />} />
-          <Route path="/" element={<Blog {...{ entries }} />} />
-          <Route path="/:slug" element={<Post {...{ entries }} />} />
+          <Route path="/add-post" element={<WritePost />} />
+          <Route path="/" element={<Blog />} />
+          <Route path="/post/:id/:slug" element={<Post />} />
         </Routes>
       </main>
     </>
   );
 };
 
-const WritePost = ({ loadEntries }) => {
-  const [entry, setEntry] = React.useState("Markdown &hearts;");
+const WritePost = () => {
+  const [post, setPost] = React.useState("Markdown &hearts;");
   const [title, setTitle] = React.useState("");
+  let navigate = useNavigate();
 
-  const addEntry = (e) => {
+  const addPost = (e) => {
     e.preventDefault();
-    const makeSlugFromTitle = (s) => {
-      s = s.trim ? s.trim() : s.replace(/^\s+|\s+$/g, "");
-      return s.split(/\s+/).join("-");
-    };
-    const slug = makeSlugFromTitle(title);
-    const blogEntry = {
+
+    const slug = slugify(title);
+    const blogPost = {
       title,
-      entry,
+      post,
       slug,
     };
-    apiClient.addEntry(blogEntry);
-    setEntry("");
+    apiClient.addPost(blogPost);
+    setPost("");
     setTitle("");
-    loadEntries();
+    navigate("/");
   };
   return (
     <>
       <div className="container">
-        <form onSubmit={(e) => addEntry(e)}>
+        <form onSubmit={(e) => addPost(e)}>
           <input
             type="text"
             value={title}
@@ -64,7 +61,7 @@ const WritePost = ({ loadEntries }) => {
             placeholder="Give your post a title"
             required
           />
-          <MDEditor value={entry} onChange={setEntry} />
+          <MDEditor value={post} onChange={setPost} />
           <button>Post</button>
         </form>
       </div>
@@ -72,39 +69,41 @@ const WritePost = ({ loadEntries }) => {
   );
 };
 
-const Post = ({ entries }) => {
-  const findPostBySlug = (slug) => {
-    console.log("Hello", { slug });
-    return entries.find((entry) => entry.slug === slug);
-  };
-  const { slug } = useParams();
+const Post = () => {
+  const [post, setPost] = React.useState({});
 
-  const entry = findPostBySlug(slug);
+  const { id } = useParams();
+
+  const loadPost = async () => setPost(await apiClient.getPostById(id));
+  React.useEffect(() => {
+    loadPost(id);
+  }, []);
 
   return (
     <>
-      <MDEditor.Markdown source={entry.entry} />
-      <CommentList {...{ entry }} />
-      <AddComment {...{ entry }} />
+      <MDEditor.Markdown source={post.post} />
+      <CommentList {...{ post }} />
+      <AddComment {...{ post, loadPost }} />
     </>
   );
 };
 
-const Blog = ({ entries }) => {
+const Blog = () => {
+  const [posts, setPosts] = React.useState([]);
+
+  const loadPosts = async () => setPosts(await apiClient.getPosts());
+  React.useEffect(() => {
+    loadPosts();
+  }, []);
+
   return (
-    <>
-      {entries.map((entry) => (
-        <Link
-          to={"/" + entry.slug}
-          key={entry.slug}
-          element={<Post {...{ entries }} />}
-        >
-          <div className="post">
-            <h1>{entry.title}</h1>
-          </div>
-        </Link>
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>
+          <Link to={`/post/${post.id}/${post.slug}`}>{post.title}</Link>
+        </li>
       ))}
-    </>
+    </ul>
   );
 };
 

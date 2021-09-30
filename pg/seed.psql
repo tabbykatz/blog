@@ -28,7 +28,7 @@ CREATE TABLE public.comments (
     id integer NOT NULL,
     comment text,
     date_created timestamp without time zone DEFAULT now(),
-    entry_id integer,
+    post_id integer,
     author text
 );
 
@@ -48,12 +48,12 @@ ALTER TABLE public.comments ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- Name: entries; Type: TABLE; Schema: public; Owner: -
+-- Name: posts; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.entries (
+CREATE TABLE public.posts (
     id integer NOT NULL,
-    entry text,
+    post text,
     time_created timestamp without time zone DEFAULT now(),
     title text,
     slug text
@@ -61,11 +61,11 @@ CREATE TABLE public.entries (
 
 
 --
--- Name: entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-ALTER TABLE public.entries ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public.entries_id_seq
+ALTER TABLE public.posts ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.posts_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -115,7 +115,7 @@ ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_
 -- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.comments (id, comment, date_created, entry_id, author) FROM stdin;
+COPY public.comments (id, comment, date_created, post_id, author) FROM stdin;
 19	&hearts;	2021-09-29 15:30:11.459035	40	tabbykatz
 20	| Table |  Love |\n|--|--|\n	2021-09-29 18:09:34.853345	46	tabitha
 21	When I leave a comment everything breaks and I don't know why	2021-09-29 18:35:08.807836	46	sad tabitha
@@ -125,10 +125,10 @@ COPY public.comments (id, comment, date_created, entry_id, author) FROM stdin;
 
 
 --
--- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.entries (id, entry, time_created, title, slug) FROM stdin;
+COPY public.posts (id, post, time_created, title, slug) FROM stdin;
 44	[BLM](https://blacklivesmatter.com/)	2021-09-29 16:55:34.552165	BLACK LIVES MATTER	BLACK-LIVES-MATTER
 40	[![MANIFESTO AGAINST POLICE VIOLENCE / PUSSY RIOT x LASTESIS](https://res.cloudinary.com/marcomontalbano/image/upload/v1632929295/video_to_markdown/images/youtube--UPfcb9aTcl0-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/UPfcb9aTcl0 "MANIFESTO AGAINST POLICE VIOLENCE / PUSSY RIOT x LASTESIS")	2021-09-29 15:28:46.064523	Yes All Cops	ACAB
 47	Markdown &hearts;	2021-09-29 18:51:30.957941	Here's a title with trailing punctuation!	Here's-a-title-with-trailing-punctuation!
@@ -143,8 +143,8 @@ COPY public.entries (id, entry, time_created, title, slug) FROM stdin;
 --
 
 COPY public.tasks (id, name) FROM stdin;
-1	🙏 Be nice when you add test entries
-2	⏲ Added entries will be reset every Sunday
+1	🙏 Be nice when you add test posts
+2	⏲ Added posts will be reset every Sunday
 3	End white supremacy
 4	Advocate for living wage
 5	Provide universal health care
@@ -159,10 +159,10 @@ SELECT pg_catalog.setval('public.comments_id_seq', 23, true);
 
 
 --
--- Name: entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.entries_id_seq', 49, true);
+SELECT pg_catalog.setval('public.posts_id_seq', 49, true);
 
 
 --
@@ -181,19 +181,19 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: entries entries_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: posts posts_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.entries
-    ADD CONSTRAINT entries_id_key UNIQUE (id);
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_id_key UNIQUE (id);
 
 
 --
--- Name: entries entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.entries
-    ADD CONSTRAINT entries_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
 
 
 --
@@ -205,11 +205,11 @@ ALTER TABLE ONLY public.tasks
 
 
 --
--- Name: comments entry_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: comments post_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.comments
-    ADD CONSTRAINT entry_id FOREIGN KEY (entry_id) REFERENCES public.entries(id) ON DELETE CASCADE;
+    ADD CONSTRAINT post_id FOREIGN KEY (post_id) REFERENCES public.posts(id) ON DELETE CASCADE;
 
 
 --

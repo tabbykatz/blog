@@ -4,7 +4,7 @@ import MDEditor from "@uiw/react-md-editor";
 
 import * as apiClient from "./apiClient";
 
-export const AddComment = ({ entry }) => {
+export const AddComment = ({ post, loadPost }) => {
   const [comment, setComment] = React.useState("**Say something nice!**");
   const [author, setAuthor] = React.useState("");
 
@@ -13,12 +13,12 @@ export const AddComment = ({ entry }) => {
     apiClient.addComment({
       comment: comment,
       author: author,
-      entry_id: entry.id,
+      post_id: post.id,
     });
-    setComment("");
+    setComment("**Say something nice!**");
     setAuthor("");
+    loadPost(post.id);
   };
-  console.log(entry);
   return (
     <>
       {" "}
@@ -40,14 +40,17 @@ export const AddComment = ({ entry }) => {
   );
 };
 
-export const CommentList = ({ entry }) => {
-  return entry.comments[0] === null ? (
-    <div>No comments yet.</div>
-  ) : (
+export const CommentList = ({ post }) => {
+  return post.comments ? (
     <ul>
-      {entry.comments.map((comment) => (
-        <MDEditor.Markdown key={comment.id} source={comment.comment} />
+      {post.comments.map((comment) => (
+        <li key={comment.id}>
+          <MDEditor.Markdown source={comment.comment} />
+          <p>- {comment.author}</p>
+        </li>
       ))}
     </ul>
+  ) : (
+    <div>No comments yet.</div>
   );
 };
