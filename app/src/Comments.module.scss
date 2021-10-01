@@ -1,0 +1,25 @@
+ul {
+  padding: 30px 10px 10px 0px;
+  margin: 0;
+}
+.comment {
+  display: flex;
+  justify-content: left;
+  background-color: white;
+  border-radius: 6px;
+  margin: 10px 10px;
+  font-size: 1rem;
+
+  a {
+    color: #264733;
+  }
+}
+
+.author {
+  margin: 10px;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 30px;
+  font-style: italic;
+  font-size: 0.75em;
+}

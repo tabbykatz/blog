@@ -1,29 +1,25 @@
 import * as React from "react";
 
 import MDEditor from "@uiw/react-md-editor";
-import {
-  Routes,
-  Route,
-  Link,
-  useParams,
-  Navigate,
-  useNavigate,
-} from "react-router-dom";
+import { Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 import slugify from "slugify";
 
 import { CommentList, AddComment } from "./Comments";
+import Nav from "./Nav";
 import * as apiClient from "./apiClient";
+
+import "./global.scss";
 
 const App = () => {
   return (
     <>
-      <nav>
-        <Link to="/">Blog</Link> | <Link to="add-post">Write Post</Link>
-      </nav>
+      <header>
+        <Nav />
+      </header>
       <main>
         <Routes>
-          <Route path="/add-post" element={<WritePost />} />
-          <Route path="/" element={<Blog />} />
+          <Route exact path="/add-post" element={<AddPost />} />
+          <Route exact path="/" element={<Blog />} />
           <Route path="/post/:id/:slug" element={<Post />} />
         </Routes>
       </main>
@@ -31,7 +27,7 @@ const App = () => {
   );
 };
 
-const WritePost = () => {
+const AddPost = () => {
   const [post, setPost] = React.useState("Markdown &hearts;");
   const [title, setTitle] = React.useState("");
   let navigate = useNavigate();
@@ -61,8 +57,13 @@ const WritePost = () => {
             placeholder="Give your post a title"
             required
           />
-          <MDEditor value={post} onChange={setPost} />
-          <button>Post</button>
+          <MDEditor className="markdown" value={post} onChange={setPost} />
+
+          <button className="pushable">
+            <span className="shadow"></span>
+            <span className="edge"></span>
+            <span className="front">post</span>
+          </button>
         </form>
       </div>
     </>

@@ -2,6 +2,7 @@ import * as React from "react";
 
 import MDEditor from "@uiw/react-md-editor";
 
+import classes from "./Comments.module.scss";
 import * as apiClient from "./apiClient";
 
 export const AddComment = ({ post, loadPost }) => {
@@ -22,20 +23,21 @@ export const AddComment = ({ post, loadPost }) => {
   return (
     <>
       {" "}
-      <details>
-        <summary>Leave a comment</summary>
-        <form onSubmit={(e) => addComment(e)}>
-          <MDEditor value={comment} onChange={setComment} />
-          <input
-            type="text"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-            placeholder="Your name?"
-            required
-          />
-          <button>Comment</button>
-        </form>
-      </details>
+      <form onSubmit={(e) => addComment(e)}>
+        <input
+          type="text"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          placeholder="Your name?"
+          required
+        />
+        <MDEditor className="markdown" value={comment} onChange={setComment} />
+        <button className="pushable">
+          <span className="shadow"></span>
+          <span className="edge"></span>
+          <span className="front">comment</span>
+        </button>
+      </form>
     </>
   );
 };
@@ -44,9 +46,11 @@ export const CommentList = ({ post }) => {
   return post.comments ? (
     <ul>
       {post.comments.map((comment) => (
-        <li key={comment.id}>
+        <li key={comment.id} className={classes.comment}>
           <MDEditor.Markdown source={comment.comment} />
-          <p>- {comment.author}</p>
+          <p>
+            <span className={classes.author}>{comment.author}</span>
+          </p>
         </li>
       ))}
     </ul>
