@@ -1,0 +1,109 @@
+@font-face {
+  font-family: system;
+  font-style: normal;
+  font-weight: 300;
+  src: local(".SFNSText-Light"), local(".HelveticaNeueDeskInterface-Light"),
+    local(".LucidaGrandeUI"), local("Ubuntu Light"), local("Segoe UI Light"),
+    local("Roboto-Light"), local("DroidSans"), local("Tahoma");
+}
+
+body {
+  font-family: "system";
+  background-color: #bddbc8;
+}
+
+img {
+  width: 50%;
+}
+
+.markdown {
+  margin-bottom: 20px;
+}
+ul {
+  list-style: none;
+
+  li {
+    padding: 10px;
+  }
+}
+
+.shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: hsl(0deg, 0%, 0% / 0.25);
+  will-change: transform;
+  transform: translateY(2px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background: linear-gradient(
+    to left,
+    #264733 0%,
+    #677e70 8%,
+    #677e70 92%,
+    #264733 100%
+  );
+}
+.front {
+  display: block;
+  position: relative;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 1 rem;
+  color: white;
+  background: #264733;
+  will-change: transform;
+  transform: translateY(-4px);
+  transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+.pushable {
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  outline-offset: 4px;
+  transition: filter 250ms;
+
+  :hover {
+    filter: brightness(110%);
+
+    &.front {
+      transform: translateY(-6px);
+      transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+    }
+  }
+  :active &.front {
+    transform: translateY(-2px);
+    transition: transform 34ms;
+  }
+  :hover &.shadow {
+    transform: translateY(4px);
+    transition: transform 250ms cubic-bezier(0.3, 0.7, 0.4, 1.5);
+  }
+  :active &.shadow {
+    transform: translateY(1px);
+    transition: transform 34ms;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+details > summary {
+  list-style: none;
+
+  ::-webkit-details-marker {
+    display: none;
+  }
+}

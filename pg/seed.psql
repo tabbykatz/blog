@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 13.3
--- Dumped by pg_dump version 13.3
+-- Dumped from database version 13.4
+-- Dumped by pg_dump version 13.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -19,6 +19,60 @@ SET row_security = off;
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.comments (
+    id integer NOT NULL,
+    comment text,
+    date_created timestamp without time zone DEFAULT now(),
+    post_id integer,
+    author text
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.comments ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: posts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.posts (
+    id integer NOT NULL,
+    post text,
+    time_created timestamp without time zone DEFAULT now(),
+    title text,
+    slug text
+);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.posts ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.posts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
 
 --
 -- Name: tasks; Type: TABLE; Schema: public; Owner: -
@@ -58,16 +112,57 @@ ALTER TABLE ONLY public.tasks ALTER COLUMN id SET DEFAULT nextval('public.tasks_
 
 
 --
+-- Data for Name: comments; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.comments (id, comment, date_created, post_id, author) FROM stdin;
+19	&hearts;	2021-09-29 15:30:11.459035	40	tabbykatz
+20	| Table |  Love |\n|--|--|\n	2021-09-29 18:09:34.853345	46	tabitha
+21	When I leave a comment everything breaks and I don't know why	2021-09-29 18:35:08.807836	46	sad tabitha
+22	**Say something nice!**	2021-09-29 18:58:29.043139	40	tristan
+23	**Say something nice!**	2021-09-29 20:02:28.54204	48	george
+\.
+
+
+--
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.posts (id, post, time_created, title, slug) FROM stdin;
+44	[BLM](https://blacklivesmatter.com/)	2021-09-29 16:55:34.552165	BLACK LIVES MATTER	BLACK-LIVES-MATTER
+40	[![MANIFESTO AGAINST POLICE VIOLENCE / PUSSY RIOT x LASTESIS](https://res.cloudinary.com/marcomontalbano/image/upload/v1632929295/video_to_markdown/images/youtube--UPfcb9aTcl0-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/UPfcb9aTcl0 "MANIFESTO AGAINST POLICE VIOLENCE / PUSSY RIOT x LASTESIS")	2021-09-29 15:28:46.064523	Yes All Cops	ACAB
+47	Markdown &hearts;	2021-09-29 18:51:30.957941	Here's a title with trailing punctuation!	Here's-a-title-with-trailing-punctuation!
+48	Markdown &hearts;	2021-09-29 18:51:47.376938	What if I use trailing space.   	What-if-I-use-trailing-space.
+49	Markdown &hearts;	2021-09-29 18:52:16.58256	I dunno    	I-dunno
+46	Markdown &hearts;	2021-09-29 17:16:37.609298	Hello, World!	Hello-World
+\.
+
+
+--
 -- Data for Name: tasks; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.tasks (id, name) FROM stdin;
-1	🙏 Be nice when you add test entries
-2	⏲ Added entries will be reset every Sunday
+1	🙏 Be nice when you add test posts
+2	⏲ Added posts will be reset every Sunday
 3	End white supremacy
 4	Advocate for living wage
 5	Provide universal health care
 \.
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.comments_id_seq', 23, true);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.posts_id_seq', 49, true);
 
 
 --
@@ -78,11 +173,43 @@ SELECT pg_catalog.setval('public.tasks_id_seq', 5, true);
 
 
 --
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: posts posts_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_id_key UNIQUE (id);
+
+
+--
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.posts
+    ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tasks tasks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.tasks
     ADD CONSTRAINT tasks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: comments post_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.comments
+    ADD CONSTRAINT post_id FOREIGN KEY (post_id) REFERENCES public.posts(id) ON DELETE CASCADE;
 
 
 --
